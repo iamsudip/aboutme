@@ -11,4 +11,4 @@ except IOError:
 # IMPORTANT: Put any additional includes below this line.  If placed above this
 # line, it's possible required libraries won't be in your searchable path
 #
-from wsgi.main import application
+from aboutme.main import application
