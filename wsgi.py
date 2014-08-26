@@ -12,3 +12,5 @@ except IOError:
 # line, it's possible required libraries won't be in your searchable path
 #
 from aboutme.main import application
+from aboutme.main import dbinit
+dbinit()
