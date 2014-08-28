@@ -61,10 +61,10 @@ def dbinit():
                         source code, ideas everything so I love the world of "FOSS". \
                         I like to implement my knowledge and learn while working on an exciting opportunity \
                         on software design and development.',
-                        avatar = '/static/avatar.jpg')
+                        avatar = '/static/iamsudip.jpg')
                     )
     db.session.commit()
-    
+
 if __name__ == '__main__':
     dbinit()
     application.run(debug=True, host="0.0.0.0", port=8888)
