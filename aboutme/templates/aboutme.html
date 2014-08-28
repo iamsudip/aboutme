@@ -2,8 +2,8 @@
 {% block content %}
 
 <div class="page-header">
-    <h1>iamsudip</h1>
-    <p>A programmer, cricket enthusiast and pythoneer</p>
+    <h1>{{ user.firstname }} {{ user.lastname }}</h1>
+    <p>{{ user.tagline }}</p>
 </div>
 <div class="container">
 <div class="row">
@@ -18,8 +18,8 @@
 
     <div class="col-sm-4">
         <div class="starter-template">
-          <img src="/static/avatar.jpg">
-          <div align="justify">I am a Pythonista and an open source enthusiast. I love sharing softwares, source code, ideas everything so I love the world of "FOSS". I like to implement my knowledge and learn while working on an exciting opportunity on software design and development. </div>
+          <img src="{{user.avatar}}">
+          <div align="justify">{{ user.bio }}</div>
         </div>
     </div>
 

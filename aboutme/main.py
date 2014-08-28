@@ -30,25 +30,41 @@ class Users(db.Model):
         self.bio = bio
         self.avatar = avatar
 
-def dbinit(): 
-    db.drop_all()
-    db.create_all()
-    db.session.add(Users(username='ekowibowo', firstname='Eko',
-                        lastname='Suprapto Wibowo', password='rahasia',
-                        email='swdev.bali@gmail.com',
-                        tagline='A cool coder and an even cooler Capoeirista',
-                        bio = 'I love Python very much!',
-                        avatar = '/static/avatar.png')
-                    )
-
-
 @application.route('/')
 @application.route('/<username>/')
 def index(username=None):
     if not username:
-        return render_template("aboutme.html", page_title="About me")
-    return render_template("index.html", page_title='Not implemented yet')
+        return render_template("index.html", page_title='Not implemented yet')
 
+    user = Users.query.filter_by(username=username).first()
+    if not user:
+        user = Users()
+        user.username = username
+        user.firstname = 'Shaktimaan, is that you?'
+        user.lastname = ''
+        user.tagline = 'You are very special, you\'ll never be forgotten!'
+        user.bio = 'Explain to the rest of the world, why you are the very most unique person to look at!'
+        user.avatar = '/static/Shaktimaan.jpg'
+        return render_template('aboutme.html', page_title = 'Claim this name: '+ username, user = user)
+
+    return render_template('aboutme.html', page_title = user.firstname+' '+user.lastname, user = user)
+
+def dbinit(): 
+    db.drop_all()
+    db.create_all()
+    # Populating with data manually
+    db.session.add(Users(username='iamsudip', firstname='Sudip',
+                        lastname='Maji', password='nahi_bataunga',
+                        email='iamsudip@programmer.net',
+                        tagline='A cool coder and an even cooler Pythonista',
+                        bio = 'I am a Pythonista and an open source enthusiast. I love sharing softwares,\
+                        source code, ideas everything so I love the world of "FOSS". \
+                        I like to implement my knowledge and learn while working on an exciting opportunity \
+                        on software design and development.',
+                        avatar = '/static/avatar.jpg')
+                    )
+    db.session.commit()
+    
 if __name__ == '__main__':
     dbinit()
     application.run(debug=True, host="0.0.0.0", port=8888)
