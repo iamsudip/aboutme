@@ -19,8 +19,8 @@ class Users(db.Model):
     tagline = db.Column(db.String(255))
     bio = db.Column(db.Text)
     avatar = db.Column(db.String(255))
-    def __init__(self, username = None, password = None, email = None, firstname = None, lastname = None,
-        tagline = None, bio = None, avatar = None):
+    def __init__(self, username=None, password=None, email=None, firstname=None, \
+        lastname=None, tagline=None, bio=None, avatar=None):
         self.username = username
         self.email = email
         self.firstname = firstname
@@ -43,11 +43,11 @@ def index(username=None):
         user.firstname = 'Shaktimaan, is that you?'
         user.lastname = ''
         user.tagline = 'You are very special, you\'ll never be forgotten!'
-        user.bio = 'Explain to the rest of the world, why you are the very most unique person to look at!'
+        user.bio = 'Explain the rest of the world, why you are the most unique person to look at!'
         user.avatar = '/static/Shaktimaan.jpg'
-        return render_template('aboutme.html', page_title = 'Claim this name: '+ username, user = user)
+        return render_template('aboutme.html', page_title='Claim this name: '+ username, user=user)
 
-    return render_template('aboutme.html', page_title = user.firstname+' '+user.lastname, user = user)
+    return render_template('aboutme.html', page_title=user.firstname+' '+user.lastname, user=user)
 
 def dbinit(): 
     db.drop_all()
