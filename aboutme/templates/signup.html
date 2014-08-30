@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+	<br>
+</div>
+<div class="row">
+	<div class="col-sm-2"></div>
+		<div class="col-sm-8 well" style="background-color: #fffffa">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-2"></div>
+						<div class="col-sm-8">
+							<form action="{{url_for('signup')}}" class="form-horizontal" method="POST">
+								{{ form.hidden_tag() }}
+								<div class="heading">
+									<h3 class="form-heading">All your online presence at one place!</h3>
+								</div>
+
+								<div class="form-group {% if form.email.errors %} has-error {% endif %}">
+									{{form.email.label()}}
+									{{ form.email(placeholder="foo@bar.com", class="form-control") }} 
+									<p class="help-block">
+									{% for error in form.email.errors %}
+										{{ error }}
+									{% endfor %}
+								</div>
+
+								<div class="form-group {% if form.password.errors %} has-error {% endif %}">
+									{{form.password.label()}}
+									{{ form.password(placeholder="p@$$w0rd", class="form-control") }}
+									<p class="help-block">
+									{% for error in form.password.errors %}
+										{{ error }}
+									{% endfor %}
+								</div>
+
+								<div class="form-group {% if form.username.errors %} has-error {% endif %}">
+									{{form.username.label()}}
+									{{form.username(placeholder="foobar", class="form-control")}}
+									<p class="help-block">
+									{% for error in form.username.errors %}
+										{{ error }}
+									{% endfor %}
+								</div>
+								
+								<div class="form-group {% if form.agree.errors %} has-error {% endif %}">
+									<label class="checkbox">
+										{{form.agree}} {{form.agree.label}}
+									</label>
+									<p class="help-block">
+									{{ form.agree.errors[0] }}
+								</div>
+								<button class="btn btn-success" type="submit">Sign Up</button>
+								
+							</form>
+						</div>
+					<div class="col-sm-2"></div>
+				</div>
+			</div>
+		</div>
+	<div class="col-sm-2"></div>
+</div>
+
+{% endblock %}

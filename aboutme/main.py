@@ -1,11 +1,16 @@
 import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy 
+from flask.ext.wtf import Form
+from wtforms import TextField, PasswordField, validators, HiddenField, TextAreaField, BooleanField
+from wtforms.validators import Required, EqualTo, Optional, Length, Email
 
 application = Flask(__name__)
 application.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('OPENSHIFT_POSTGRESQL_DB_URL') \
     if os.environ.get('OPENSHIFT_POSTGRESQL_DB_URL') else 'postgresql://postgres:postgres@localhost:5432/aboutmedb'
+application.config['CSRF_ENABLED'] = True
+application.config['SECRET_KEY'] = 'youneedtoputasecretkeyhere'
 db = SQLAlchemy(application)
 
 class Users(db.Model):
@@ -30,12 +35,28 @@ class Users(db.Model):
         self.bio = bio
         self.avatar = avatar
 
-@application.route('/')
-@application.route('/<username>/')
-def index(username=None):
-    if not username:
-        return render_template("index.html", page_title='Not implemented yet')
+class SignupForm(Form):
+    # This one not implemented yet!
+    fullname = TextField('Email address', validators=[
+            Required('Please enter your first and last name.'),
+            Length(min=6, message=(u'Email address too short')),
+            Email(message=(u'That\'s not a valid email address.'))])
+    email = TextField('Email address', validators=[
+            Required('Please provide a valid email address'),
+            Length(min=6, message=(u'Email address too short')),
+            Email(message=(u'That\'s not a valid email address.'))])
+    password = PasswordField('Create a password', validators=[
+            Required(), Length(min=6, message=(u'Please give a longer password'))])
+    username = TextField('Choose your username', validators=[Required()])
+    agree = BooleanField('I agree all your terms of services',
+            validators=[Required(u'You must accept our terms of service')])
 
+@application.route('/')
+def index():
+    return render_template("index.html", page_title='Conversed / Your online presence!')
+
+@application.route('/<username>/')
+def userpage(username=None):
     user = Users.query.filter_by(username=username).first()
     if not user:
         user = Users()
@@ -46,8 +67,17 @@ def index(username=None):
         user.bio = 'Explain the rest of the world, why you are the most unique person to look at!'
         user.avatar = '/static/Shaktimaan.jpg'
         return render_template('aboutme.html', page_title='Claim this name: '+ username, user=user)
-
     return render_template('aboutme.html', page_title=user.firstname+' '+user.lastname, user=user)
+
+@application.route('/signup/', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        form = SignupForm(request.form)
+        if form.validate():
+            pass
+        else:
+            return render_template('signup.html', form = form, page_title = 'Signup to Conversed!')
+    return render_template('signup.html', form = SignupForm(), page_title = 'Signup to Conversed!')
 
 def dbinit(): 
     db.drop_all()
@@ -67,4 +97,5 @@ def dbinit():
 
 if __name__ == '__main__':
     dbinit()
-    application.run(debug=True, host="0.0.0.0", port=8888)
+    application.run(debug=True, host="127.0.0.1", port=8888)
+    
