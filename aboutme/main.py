@@ -6,7 +6,7 @@ from flask.ext.wtf import Form
 from wtforms import TextField, PasswordField, validators, HiddenField, TextAreaField, BooleanField
 from wtforms.validators import Required, EqualTo, Optional, Length, Email
 
-from validators import ValidEmailDomain
+from validators.validators import ValidEmailDomain
 
 application = Flask(__name__)
 application.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('OPENSHIFT_POSTGRESQL_DB_URL') \
@@ -55,9 +55,7 @@ def index():
 
 @application.route('/<username>/')
 def userpage(username=None):
-    print username
     user = Users.query.filter_by(username=username).first()
-    print user
     if not user:
         user = Users()
         user.username = username
