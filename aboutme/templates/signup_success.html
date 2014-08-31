@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div>
+	<br>
+</div>
+<div class="row">
+	<div class="col-sm-2"></div>
+		<div class="col-sm-8 well" style="background-color: #fffffa">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-2"></div>
+						<div class="col-sm-8">
+							<div class="heading">
+								<h3 class="form-heading">Congratulations {{ user.username }}!</h3>
+							</div>
+							<p>You are one of the very early users of this service. Many features you'll find broken, just bear with us. Click the sign in button below to log in.</p>
+    						<p><a class="btn btn-primary btn-lg" href="#">Sign in</a></p>
+						</div>
+					<div class="col-sm-2"></div>
+				</div>
+			</div>
+		</div>
+	<div class="col-sm-2"></div>
+</div>
+
+{% endblock %}

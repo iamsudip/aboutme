@@ -14,7 +14,7 @@
 							<form action="{{url_for('signup')}}" class="form-horizontal" method="POST">
 								{{ form.hidden_tag() }}
 								<div class="heading">
-									<h3 class="form-heading">All your online presence at one place!</h3>
+									<h3 class="form-heading">All your online presence at one place - Conversed!</h3>
 								</div>
 
 								<div class="form-group {% if form.email.errors %} has-error {% endif %}">
@@ -31,7 +31,7 @@
 									{{ form.password(placeholder="p@$$w0rd", class="form-control") }}
 									<p class="help-block">
 									{% for error in form.password.errors %}
-										{{ error }}
+										{{ error }}<br>
 									{% endfor %}
 								</div>
 
@@ -40,7 +40,7 @@
 									{{form.username(placeholder="foobar", class="form-control")}}
 									<p class="help-block">
 									{% for error in form.username.errors %}
-										{{ error }}
+										{{ error }}<br>
 									{% endfor %}
 								</div>
 								

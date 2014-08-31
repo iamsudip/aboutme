@@ -21,7 +21,7 @@ class Users(db.Model):
     firstname = db.Column(db.String(20))
     lastname = db.Column(db.String(20))
     password = db.Column(db.String)
-    email = db.Column(db.String(100), unique=True)
+    email = db.Column(db.String(80), unique=True)
     time_registered = db.Column(db.DateTime)
     tagline = db.Column(db.String(255))
     bio = db.Column(db.Text)
@@ -55,7 +55,9 @@ def index():
 
 @application.route('/<username>/')
 def userpage(username=None):
+    print username
     user = Users.query.filter_by(username=username).first()
+    print user
     if not user:
         user = Users()
         user.username = username
@@ -72,10 +74,33 @@ def signup():
     if request.method == 'POST':
         form = SignupForm(request.form)
         if form.validate():
-            pass
+            user = Users()
+            user_exist = Users.query.filter_by(username=form.username.data).first()
+            email_exist = Users.query.filter_by(email=form.email.data).first()
+            if user_exist:
+                form.username.errors.append(u'Username already taken')
+            if email_exist:
+                form.email.errors.append(u'Email already in use')
+            if user_exist or email_exist:
+                return render_template('signup.html', form=form, page_title='Signup to Conversed!')
+            else:
+                # For testing purpose not created the form to take this data by users
+                # need to fix
+                # still populating data this way
+                user.username = form.username.data
+                user.email = form.email.data
+                user.password = form.password.data
+                user.firstname = u"foo"
+                user.lastname = u"bar"
+                user.tagline = u"foobar"
+                user.bio = u"foobarfoobarfoobar foobarfoobar foobar foobar foobarfoobar foobarfoobarfoobar"
+                user.avatar = '/static/favicon.png'
+                db.session.add(user)
+                db.session.commit()
+                return render_template('signup_success.html', user=user, page_title='Registered to Conversed!')
         else:
-            return render_template('signup.html', form = form, page_title = 'Signup to Conversed!')
-    return render_template('signup.html', form = SignupForm(), page_title = 'Signup to Conversed!')
+            return render_template('signup.html', form=form, page_title='Signup to Conversed!')
+    return render_template('signup.html', form=SignupForm(), page_title='Signup to Conversed!')
 
 def dbinit(): 
     db.drop_all()
@@ -92,7 +117,7 @@ def dbinit():
         I like to implement my knowledge and learn while working on an exciting opportunity \
         on software design and development.',
         avatar=u'/static/iamsudip.jpg')
-                    )
+    )
     db.session.commit()
 
 if __name__ == '__main__':
