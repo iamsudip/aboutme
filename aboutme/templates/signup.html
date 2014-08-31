@@ -22,7 +22,7 @@
 									{{ form.email(placeholder="foo@bar.com", class="form-control") }} 
 									<p class="help-block">
 									{% for error in form.email.errors %}
-										{{ error }}
+										{{ error }}<br>
 									{% endfor %}
 								</div>
 

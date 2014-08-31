@@ -6,6 +6,8 @@ from flask.ext.wtf import Form
 from wtforms import TextField, PasswordField, validators, HiddenField, TextAreaField, BooleanField
 from wtforms.validators import Required, EqualTo, Optional, Length, Email
 
+from validators import ValidEmailDomain
+
 application = Flask(__name__)
 application.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('OPENSHIFT_POSTGRESQL_DB_URL') \
     if os.environ.get('OPENSHIFT_POSTGRESQL_DB_URL') else 'postgresql://postgres:postgres@localhost:5432/aboutmedb'
@@ -36,15 +38,16 @@ class Users(db.Model):
         self.avatar = avatar
 
 class SignupForm(Form):
-    email = TextField('Email address', validators=[
-            Required('Please provide a valid email address'),
-            Length(min=6, message=(u'Email address too short')),
-            Email(message=(u'That\'s not a valid email address.'))])
-    password = PasswordField('Create a password', validators=[
-            Required(), Length(min=6, message=(u'Please give a longer password'))])
-    username = TextField('Choose your username', validators=[Required()])
-    agree = BooleanField('I agree all your terms of services',
-            validators=[Required(u'You must accept our terms of service')])
+    email = TextField('Email address',
+        validators=[Required(u"We need to confirm your email address to create the account"),
+            Length(min=5, max=80, message=u"Address should be of length %(min)d to %(max)d characters"),
+            Email(u"That does not appear to be a valid email address"),
+            ValidEmailDomain()])
+    password = PasswordField('Create a password',
+        validators=[Required(), Length(min=6, message=(u'Please give a longer password minimum %(min)d characters'))])
+    username = TextField(u'Choose your username', validators=[Required()])
+    agree = BooleanField(u'I agree all your terms of services',
+        validators=[Required(u'You must accept our terms of service')])
 
 @application.route('/')
 def index():
@@ -56,11 +59,11 @@ def userpage(username=None):
     if not user:
         user = Users()
         user.username = username
-        user.firstname = 'Shaktimaan, is that you?'
-        user.lastname = ''
-        user.tagline = 'You are very special, you\'ll never be forgotten!'
-        user.bio = 'Explain the rest of the world, why you are the most unique person to look at!'
-        user.avatar = '/static/Shaktimaan.jpg'
+        user.firstname = u'Shaktimaan, is that you?'
+        user.lastname = u''
+        user.tagline = u'You are very special, you\'ll never be forgotten!'
+        user.bio = u'Explain the rest of the world, why you are the most unique person to look at!'
+        user.avatar = u'/static/Shaktimaan.jpg'
         return render_template('aboutme.html', page_title='Claim this name: '+ username, user=user)
     return render_template('aboutme.html', page_title=user.firstname+' '+user.lastname, user=user)
 
@@ -78,15 +81,17 @@ def dbinit():
     db.drop_all()
     db.create_all()
     # Populating with data manually
-    db.session.add(Users(username='iamsudip', firstname='Sudip',
-                        lastname='Maji', password='nahi_bataunga',
-                        email='iamsudip@programmer.net',
-                        tagline='A cool coder and an even cooler Pythonista',
-                        bio = 'I am a Pythonista and an open source enthusiast. I love sharing softwares,\
-                        source code, ideas everything so I love the world of "FOSS". \
-                        I like to implement my knowledge and learn while working on an exciting opportunity \
-                        on software design and development.',
-                        avatar = '/static/iamsudip.jpg')
+    db.session.add(Users(username=u'iamsudip',
+        firstname=u'Sudip',
+        lastname=u'Maji',
+        password=u'nahi_bataunga',
+        email=u'iamsudip@programmer.net',
+        tagline=u'A cool coder and an even cooler Pythonista',
+        bio=u'I am a Pythonista and an open source enthusiast. I love sharing softwares,\
+        source code, ideas everything so I love the world of "FOSS". \
+        I like to implement my knowledge and learn while working on an exciting opportunity \
+        on software design and development.',
+        avatar=u'/static/iamsudip.jpg')
                     )
     db.session.commit()
 
