@@ -11,48 +11,12 @@ import wtforms
 from wtforms import TextField, PasswordField, validators, HiddenField, TextAreaField, BooleanField
 from wtforms.validators import Required, EqualTo, Optional, Length, Email
 
-from validators.validators import ValidEmailDomain
-
 application = Flask(__name__)
 application.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('OPENSHIFT_POSTGRESQL_DB_URL') \
     if os.environ.get('OPENSHIFT_POSTGRESQL_DB_URL') else 'postgresql://postgres:postgres@localhost:5432/aboutmedb'
 application.config['CSRF_ENABLED'] = True
 application.config['SECRET_KEY'] = 'youneedtoputasecretkeyhere'
 db = SQLAlchemy(application)
-
-class Users(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(60), unique=True)
-    firstname = db.Column(db.String(20))
-    lastname = db.Column(db.String(20))
-    password = db.Column(db.String)
-    email = db.Column(db.String(80), unique=True)
-    time_registered = db.Column(db.DateTime)
-    tagline = db.Column(db.String(255))
-    bio = db.Column(db.Text)
-    avatar = db.Column(db.String(255))
-    def __init__(self, username=None, password=None, email=None, firstname=None, \
-        lastname=None, tagline=None, bio=None, avatar=None):
-        self.username = username
-        self.email = email
-        self.firstname = firstname
-        self.lastname = lastname
-        self.password = password
-        self.tagline = tagline
-        self.bio = bio
-        self.avatar = avatar
-
-class SignupForm(Form):
-    email = TextField('Email address',
-        validators=[Required(u"We need to confirm your email address to create the account"),
-            Length(min=5, max=80, message=u"Address should be of length %(min)d to %(max)d characters"),
-            Email(u"That does not appear to be a valid email address"),
-            ValidEmailDomain()])
-    password = PasswordField('Create a password',
-        validators=[Required(), Length(min=6, message=(u'Please give a longer password minimum %(min)d characters'))])
-    username = TextField(u'Choose your username', validators=[Required()])
-    agree = BooleanField(u'I agree all your terms of services',
-        validators=[Required(u'You must accept our terms of service')])
 
 class ValidEmailDomain(object):
     """
@@ -93,6 +57,41 @@ class ValidEmailDomain(object):
                 pass
         else:
             raise wtforms.validators.StopValidation(self.message or self.message_invalid)
+            
+class Users(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(60), unique=True)
+    firstname = db.Column(db.String(20))
+    lastname = db.Column(db.String(20))
+    password = db.Column(db.String)
+    email = db.Column(db.String(80), unique=True)
+    time_registered = db.Column(db.DateTime)
+    tagline = db.Column(db.String(255))
+    bio = db.Column(db.Text)
+    avatar = db.Column(db.String(255))
+    def __init__(self, username=None, password=None, email=None, firstname=None, \
+        lastname=None, tagline=None, bio=None, avatar=None):
+        self.username = username
+        self.email = email
+        self.firstname = firstname
+        self.lastname = lastname
+        self.password = password
+        self.tagline = tagline
+        self.bio = bio
+        self.avatar = avatar
+
+class SignupForm(Form):
+    email = TextField('Email address',
+        validators=[Required(u"We need to confirm your email address to create the account"),
+            Length(min=5, max=80, message=u"Address should be of length %(min)d to %(max)d characters"),
+            Email(u"That does not appear to be a valid email address"),
+            ValidEmailDomain()])
+    password = PasswordField('Create a password',
+        validators=[Required(), Length(min=6, message=(u'Please give a longer password minimum %(min)d characters'))])
+    username = TextField(u'Choose your username', validators=[Required()])
+    agree = BooleanField(u'I agree all your terms of services',
+        validators=[Required(u'You must accept our terms of service')])
+
 
 @application.route('/')
 def index():
