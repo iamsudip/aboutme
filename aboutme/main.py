@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-#import dns.resolver
+import dns.resolver
 import os
 import re
 
