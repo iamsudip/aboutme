@@ -11,8 +11,6 @@ import wtforms
 from wtforms import TextField, PasswordField, validators, HiddenField, TextAreaField, BooleanField
 from wtforms.validators import Required, EqualTo, Optional, Length, Email
 
-from validators.validators import ValidEmailDomain
-
 application = Flask(__name__)
 application.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('OPENSHIFT_POSTGRESQL_DB_URL') \
     if os.environ.get('OPENSHIFT_POSTGRESQL_DB_URL') else 'postgresql://postgres:postgres@localhost:5432/aboutmedb'
