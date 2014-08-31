@@ -36,11 +36,6 @@ class Users(db.Model):
         self.avatar = avatar
 
 class SignupForm(Form):
-    # This one not implemented yet!
-    fullname = TextField('Email address', validators=[
-            Required('Please enter your first and last name.'),
-            Length(min=6, message=(u'Email address too short')),
-            Email(message=(u'That\'s not a valid email address.'))])
     email = TextField('Email address', validators=[
             Required('Please provide a valid email address'),
             Length(min=6, message=(u'Email address too short')),
