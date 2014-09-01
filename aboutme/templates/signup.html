@@ -55,12 +55,16 @@
 									{% endfor %}
 									</p>
 								
+					
+								</div>
+
+								<div class="form-group {% if signup_form.agree.errors %} has-error {% endif %}">
 									<label class="checkbox">
 										{{signup_form.agree}} {{signup_form.agree.label}}
 									</label>
 									<p class="help-block">
 									{{ signup_form.agree.errors[0] }}
-									</p>
+									
 								</div>
 								<button class="btn btn-success" type="submit">Sign Up</button>
 								

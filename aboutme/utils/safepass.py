@@ -2,6 +2,8 @@
 
 import bcrypt
 
+__all__ = ['hashed_password', 'validate_password']
+
 def hashed_password(password):
     pass
 
