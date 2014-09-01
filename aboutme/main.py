@@ -41,15 +41,19 @@ class Users(db.Model):
 
 class SignupForm(Form):
     email = TextField('Email address',
-        validators=[Required(u"We need to confirm your email address to create the account"),
-            Length(min=5, max=80, message=u"Address should be of length %(min)d to %(max)d characters"),
-            Email(u"That does not appear to be a valid email address"),
+        validators=[Required(u"We need to confirm your email address to create the account."),
+            Length(min=5, max=80, message=u"Address should be of length %(min)d to %(max)d characters."),
+            Email(u"That does not appear to be a valid email address."),
             ValidEmailDomain()])
     password = PasswordField('Create a password',
-        validators=[Required(), Length(min=6, message=(u'Please give a longer password minimum %(min)d characters'))])
-    username = TextField(u'Choose your username', validators=[Required()])
+        validators=[Required(u"Please provide a password."),
+            Length(min=6, message=(u'Please give a longer password minimum %(min)d characters'))])
+    username = TextField(u'Choose your username',
+        validators=[Required(u"You forgot to enter username."),
+            Length(min=3, message=(u'Minimum %(min)d characters.')),
+            ValidUserName()])
     agree = BooleanField(u'I agree all your terms of services',
-        validators=[Required(u'You must accept our terms of service')])
+        validators=[Required(u'You must accept our terms of service.')])
 
 
 @application.route('/')
