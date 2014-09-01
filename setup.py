@@ -8,6 +8,7 @@ setup(
     author_email='iamsudip@programmer.net',
     url='http://www.python.org/sigs/distutils-sig/',
     install_requires=[
+        'bcrypt',
         'dnspython',
         'Flask==0.10.1',
         'Flask-SQLAlchemy==1.0',

@@ -7,7 +7,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask.ext.wtf import Form
 from wtforms import TextField, PasswordField, validators, HiddenField, TextAreaField, BooleanField
 from wtforms.validators import Required, EqualTo, Optional, Length, Email
-from validators import *
+from utils import *
+
+#Need to separte followings makes clumsy here
 application = Flask(__name__)
 application.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('OPENSHIFT_POSTGRESQL_DB_URL') \
     if os.environ.get('OPENSHIFT_POSTGRESQL_DB_URL') else 'postgresql://postgres:postgres@localhost:5432/aboutmedb'

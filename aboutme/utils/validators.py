@@ -56,7 +56,7 @@ class ValidUserName(object):
     :param str message_starting_invalid: Message if username does not starts with alphanumeric character
     """
     message_invalid = u"That is not a valid username, use only alphanumeric characters and underscores."
-    message_starting_invalid = u"Username should starts with a number or character."
+    message_starting_invalid = u"Username should start with a number or character."
 
     def __init__(self, message=None, message_invalid=None, message_starting_invalid=None):
         self.message = message
