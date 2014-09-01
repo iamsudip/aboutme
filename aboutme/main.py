@@ -42,21 +42,33 @@ class Users(db.Model):
         self.avatar = avatar
 
 class SignupForm(Form):
-    email = TextField('Email address',
+    email = TextField("Email address",
         validators=[Required(u"We need to confirm your email address to create the account."),
             Length(min=5, max=80, message=u"Address should be of length %(min)d to %(max)d characters."),
             Email(u"That does not appear to be a valid email address."),
             ValidEmailDomain()])
-    password = PasswordField('Create a password',
-        validators=[Required(u"Please provide a password."),
-            Length(min=6, message=(u'Please give a longer password minimum %(min)d characters'))])
-    username = TextField(u'Choose your username',
+    username = TextField(u"Choose your username",
         validators=[Required(u"You forgot to enter username."),
-            Length(min=3, message=(u'Minimum %(min)d characters.')),
+            Length(min=3, message=(u"Minimum %(min)d characters.")),
             ValidUserName()])
+    password = PasswordField("Create a password",
+        validators=[Required(u"Please provide a password."),
+            Length(min=6, message=(u"Please give a longer password minimum %(min)d characters"))])
+    repassword = PasswordField("Re-type the password",
+        validators=[Required(u"Please re-type the password."),
+            Length(min=6, message=(u'Password doesn\'t match'))])
     agree = BooleanField(u'I agree all your terms of services',
         validators=[Required(u'You must accept our terms of service.')])
 
+class SigninForm(Form):
+    username = TextField('Username', validators=[
+        Required(u"You forgot to enter username."),
+        Length(min=3, message=(u'Your username must be %(min)d characters.')),
+        ValidUserName()])
+    password = PasswordField('Password', validators=[
+        Required(u"Please provide a password."),
+        Length(min=6, message=(u'Please give a longer password'))])
+    remember_me = BooleanField('Remember me', default=False)
 
 @application.route('/')
 def index():
@@ -106,8 +118,23 @@ def signup():
                 db.session.commit()
                 return render_template('signup_success.html', user=user, page_title='Registered to Conversed!')
         else:
-            return render_template('signup.html', form=form, page_title='Signup to Conversed!')
-    return render_template('signup.html', form=SignupForm(), page_title='Signup to Conversed!')
+            return render_template('signup.html', signup_form=form, page_title='Signup to Conversed!')
+    return render_template('signup.html', signup_form=SignupForm(), page_title='Signup to Conversed!')
+
+@application.route('/signin/', methods=['POST', 'GET'])
+def signin():
+    if request.method == 'POST':
+        form = SigninForm(request.form)
+        if form.validate():
+            user = Users()
+            user_exist = Users.query.filter_by(username=form.username.data).first()
+            if not user_exist:
+                form.username.errors.append(u'Username/Password is wrong.')
+            user.password = form.password.data
+        else:
+            return render_template('signin.html', signin_form=form, page_title='Signin to Conversed!')
+
+    return render_template('signin.html', signin_form=SigninForm(), page_title='Signin to Conversed')
 
 def dbinit(): 
     db.drop_all()

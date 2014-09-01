@@ -12,49 +12,66 @@
 					<div class="col-sm-2"></div>
 						<div class="col-sm-8">
 							<form action="{{url_for('signup')}}" class="form-horizontal" method="POST">
-								{{ form.hidden_tag() }}
+								{{ signup_form.hidden_tag() }}
 								<div class="heading">
 									<h3 class="form-heading">All your online presence at one place - Conversed!</h3>
 								</div>
 
-								<div class="form-group {% if form.email.errors %} has-error {% endif %}">
-									{{form.email.label()}}
-									{{ form.email(placeholder="foo@bar.com", class="form-control") }} 
+								<div class="form-group {% if signup_form.email.errors %} has-error {% endif %}">
+									{{signup_form.email.label()}}
+									{{ signup_form.email(placeholder="foo@bar.com", class="form-control") }} 
 									<p class="help-block">
-									{% for error in form.email.errors %}
+									{% for error in signup_form.email.errors %}
 										{{ error }}<br>
 									{% endfor %}
 								</div>
 
-								<div class="form-group {% if form.password.errors %} has-error {% endif %}">
-									{{form.password.label()}}
-									{{ form.password(placeholder="p@$$w0rd", class="form-control") }}
+								<div class="form-group {% if signup_form.username.errors %} has-error {% endif %}">
+									{{signup_form.username.label()}}
+									{{signup_form.username(placeholder="foobar", class="form-control")}}
 									<p class="help-block">
-									{% for error in form.password.errors %}
+									{% for error in signup_form.username.errors %}
 										{{ error }}<br>
 									{% endfor %}
+									</p>
 								</div>
 
-								<div class="form-group {% if form.username.errors %} has-error {% endif %}">
-									{{form.username.label()}}
-									{{form.username(placeholder="foobar", class="form-control")}}
+								<div class="form-group {% if signup_form.password.errors %} has-error {% endif %}">
+									{{signup_form.password.label()}}
+									{{ signup_form.password(placeholder="p@$$w0rd", class="form-control") }}
 									<p class="help-block">
-									{% for error in form.username.errors %}
+									{% for error in signup_form.password.errors %}
 										{{ error }}<br>
 									{% endfor %}
+									</p>
 								</div>
+
+								<div class="form-group {% if signup_form.repassword.errors %} has-error {% endif %}">
+									{{signup_form.repassword.label()}}
+									{{ signup_form.repassword(placeholder="p@$$w0rd", class="form-control") }}
+									<p class="help-block">
+									{% for error in signup_form.repassword.errors %}
+										{{ error }}<br>
+									{% endfor %}
+									</p>
 								
-								<div class="form-group {% if form.agree.errors %} has-error {% endif %}">
 									<label class="checkbox">
-										{{form.agree}} {{form.agree.label}}
+										{{signup_form.agree}} {{signup_form.agree.label}}
 									</label>
 									<p class="help-block">
-									{{ form.agree.errors[0] }}
+									{{ signup_form.agree.errors[0] }}
+									</p>
 								</div>
 								<button class="btn btn-success" type="submit">Sign Up</button>
 								
 							</form>
+							<br>
+	    					<p>
+	    						Already have an account?
+	    						<a href="{{url_for('signin')}}">Sign in »</a>
+	    					</p>
 						</div>
+
 					<div class="col-sm-2"></div>
 				</div>
 			</div>
