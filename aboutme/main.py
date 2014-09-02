@@ -201,6 +201,20 @@ def signin():
         session['next'] = request.args.get('next')
         return render_template('signin.html', signin_form=SigninForm(), page_title='Signin to Conversed!')
 
+
+# Not implemented yet
+@application.route('/profile', methods=['POST', 'GET'])
+@login_required
+def profile():
+    return render_template('profile.html', page_title='Your online profile')
+
+@application.route('/signout', methods=['GET'])
+def signout():
+    session.pop('signed')
+    username = session.pop('username')
+    logout_user()
+    return render_template('signout.html', page_title='Signned out succesfully!', username=username)
+
 # it should be in development.py cause it's only need to run when in development phase,
 def dbinit():
     """
@@ -224,6 +238,6 @@ def dbinit():
     db.session.commit()
 
 if __name__ == '__main__':
-    dbinit()
+    # dbinit()
     application.run(debug=True, host="127.0.0.1", port=8888)
     
