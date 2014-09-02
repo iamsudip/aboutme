@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div>
+	<br>
+</div>
+<div class="row">
+	<div class="col-sm-2"></div>
+		<div class="col-sm-8 well" style="background-color: #fffffa">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-2"></div>
+						<div class="col-sm-8">
+							<div class="heading">
+								<h3 class="form-heading">Signed out successfully {{ username }}!</h3>
+							</div>
+							<p>Come back tomorrow, we are always gathering data about you.</p>
+    						<p><a class="btn btn-primary btn-lg" href="{{url_for('signin')}}">Sign in</a></p>
+						</div>
+					<div class="col-sm-2"></div>
+				</div>
+			</div>
+		</div>
+	<div class="col-sm-2"></div>
+</div>
+
+{% endblock %}
