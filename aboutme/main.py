@@ -171,12 +171,12 @@ def signup():
             return render_template('signup.html', signup_form=form, page_title='Signup to Conversed!')
     return render_template('signup.html', signup_form=SignupForm(), page_title='Signup to Conversed!')
 
-@application.route('/signin', methods=['POST', 'GET'])
+@application.route('/signin/', methods=['POST', 'GET'])
 def signin():
+    form = SigninForm(request.form)
     if request.method == 'POST':
         if current_user is not None and current_user.is_authenticated():
             return redirect(url_for('index'))
-        form = SigninForm(request.form)
         if form.validate():
             user = Users.query.filter_by(username=form.username.data).first()
             if user is None:
@@ -186,7 +186,7 @@ def signin():
             if user.password != form.password.data:
                 form.password.errors.append(u'Username or Password is wrong.')
                 return render_template('signin.html', signin_form=form, page_title='Signin to Conversed!')
-            login_user(user, remember = form.remember_me.data)
+            login_user(user, remember=form.remember_me.data)
             session['signed'] = True
             session['username']= user.username
             if session.get('next'):
@@ -201,19 +201,21 @@ def signin():
         session['next'] = request.args.get('next')
         return render_template('signin.html', signin_form=SigninForm(), page_title='Signin to Conversed!')
 
-
 # Not implemented yet
 @application.route('/profile', methods=['POST', 'GET'])
 @login_required
 def profile():
     return render_template('profile.html', page_title='Your online profile')
 
-@application.route('/signout', methods=['GET'])
+@application.route('/signout/', methods=['GET'])
 def signout():
-    session.pop('signed')
-    username = session.pop('username')
-    logout_user()
-    return render_template('signout.html', page_title='Signned out succesfully!', username=username)
+    try:
+        session.pop('signed')
+        username = session.pop('username')
+        logout_user()
+        return render_template('signout.html', page_title='Signned out succesfully!', username=username)
+    except KeyError:
+        return redirect(url_for('signin'))
 
 # it should be in development.py cause it's only need to run when in development phase,
 def dbinit():
