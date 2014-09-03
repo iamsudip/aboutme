@@ -9,9 +9,12 @@ Service Description
 
 This a social experience site as I said above and more or less like http://about.me/ but not completely copy of it.
 
+TODO
+----
+
 For now, First target is make the service alive: like
 
-1. make a sign up page where people can sign up
+1. Re-build UI, Make use of parallax scrolling in the main page
 
 2. not only sign up, give them their own page to create and manipulate their bio
 
