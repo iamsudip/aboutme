@@ -158,7 +158,7 @@ def signup():
                 # still populating data this way
                 user.username = form.username.data
                 user.email = form.email.data
-                user.password = form.password.data
+                user.password = hashed_password(form.password.data.strip())
                 user.firstname = u"foo"
                 user.lastname = u"bar"
                 user.tagline = u"foobar"
@@ -183,7 +183,7 @@ def signin():
                 form.password.errors.append(u'Username or Password is wrong.')
                 return render_template('signin.html', signin_form=form, page_title='Signin to Conversed!')
             # Make use of utils.safepass here
-            if user.password != form.password.data:
+            if not validated_password(user.password, form.password.data):
                 form.password.errors.append(u'Username or Password is wrong.')
                 return render_template('signin.html', signin_form=form, page_title='Signin to Conversed!')
             login_user(user, remember=form.remember_me.data)
@@ -228,7 +228,7 @@ def dbinit():
     db.session.add(Users(username=u'iamsudip',
         firstname=u'Sudip',
         lastname=u'Maji',
-        password=u'nahi_bataunga',
+        password=hashed_password("nahi_batunga"),
         email=u'iamsudip@programmer.net',
         tagline=u'A cool coder and an even cooler Pythonista',
         bio=u'I am a Pythonista and an open source enthusiast. I love sharing softwares,\
@@ -240,6 +240,6 @@ def dbinit():
     db.session.commit()
 
 if __name__ == '__main__':
-    # dbinit()
+    dbinit()
     application.run(debug=True, host="127.0.0.1", port=8888)
     
