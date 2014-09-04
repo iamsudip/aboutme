@@ -24,6 +24,8 @@ For now, First target is make the service alive: like
 
 5. and many more, you can always suggest (open an issue here or mail me.)
 
+6. Add feature: Github login
+
 Setup
 -----
 
