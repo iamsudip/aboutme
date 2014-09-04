@@ -14,17 +14,19 @@ TODO
 
 For now, First target is make the service alive: like
 
-1. Re-build UI, Make use of parallax scrolling in the main page
+* Re-build UI, Make use of parallax scrolling in the main page
 
-2. not only sign up, give them their own page to create and manipulate their bio
+* not only sign up, give them their own page to create and manipulate their bio
 
-3. one click resume making extension
+* one click resume making extension
 
-4. give user an option to create a blog if she doesn't have one
+* give user an option to create a blog if she doesn't have one
 
-5. and many more, you can always suggest (open an issue here or mail me.)
+* and many more, you can always suggest (open an issue here or mail me.)
 
-6. Add feature: Github login
+* Add feature: Github login
+
+* Include Client side validation to make things faster for the user.
 
 Setup
 -----
