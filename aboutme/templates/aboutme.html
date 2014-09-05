@@ -17,49 +17,50 @@
         </div>
     </div> <!-- /.col-sm-4-->
 
-    <!-- search field 
-    <form class="navbar-form navbar-right" role="search">
-        <div class="form-group">
-            <input type="text" class="form-control" placeholder="Search for people">
-        </div>
-        <button type="submit" class="btn btn-default">
-            <span class="glyphicon glyphicon-search"></span>
-        </button>
-    </form>  end search field-->
-    <div class="col-sm-8"> 
-        <div class="container">
-        {% for project in user.portfolio %}
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-sm-5">
-                                <a href="#"><strong>{{ project.title }}</strong></a>
-                                <br>
-                                {{ project.description }}
-                            </div>
-                            <div class="col-sm-7">
-                                {% for tag in project.tags.split(',') %}
-                                    <span class="badge badge-important">{{ tag }}</span>
-                                {% endfor %}
-                            </div>
+    <!-- right column -->
+    <div class="col-sm-8">
+        <div class="row">
+            <div class="navbar-left col-sm-12">
+                <form class="navbar-form navbar-right" role="search">
+                    <div class="input-group">
+                        <div class="input-group-btn" data-toggle="tooltip" data-placement="top" title="Click to add projects">
+                            <button class="btn btn-default btn-success" data-toggle="modal" data-target="#add_projects_form">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        </div>
+                        <input class="form-control" type="text" placeholder="Search projects">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default btn-primary" type="submit">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
                         </div>
                     </div>
-                </li>   
-            </ul>
-        {% endfor %}
+                </form>
+            </div> <!-- /.col-sm-12-->
+        </div> <!-- end row-->
+        <div class="container">
+            {% for project in user.portfolio %}
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-7">
+                                    <a href="#" data-toggle><strong>{{ project.title }}</strong></a>
+                                    <br>
+                                    {{ project.description }}
+                                </div>
+                                <div class="col-sm-5">
+                                    {% for tag in project.tags.split(',') %}
+                                        <span class="badge badge-important">{{ tag }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            {% endfor %}
         </div>
-    </div>
-    <!--
-    <div class="col-sm-8"> 
-        <ul class="list-group">
-            <li class="list-group-item">Distributed POS application<span class="badge badge-important">python</span><span class="badge badge-success">flask</span><span class="badge badge-success">sqlalchemy</span><span class="badge badge-success">postgresql</span><span class="badge badge-success">openshift</span></li>
-            <li class="list-group-item">Distributed logging system<span class="badge badge-success">python</span><span class="badge badge-success">0MQ</span><span class="badge badge-success">sqlite3</span><span class="badge badge-success"></span></li>
-            <li class="list-group-item">Flipkart captcha cracker<span class="badge badge-success">python</span><span class="badge badge-success">PIL</span></li>
-            <li class="list-group-item">Subtitle Downloader - pysub-dl CLI tool<span class="badge badge-success">python</span><span class="badge badge-success">BeautifulSoup</span></li>
-        </ul>
-    </div>   /.col-sm-8-->
-
+    </div> <!-- /.col-sm-8-->
 </div>
 
 {% endblock %}
