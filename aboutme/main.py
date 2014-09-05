@@ -124,11 +124,31 @@ class SigninForm(Form):
     username = TextField('Username', validators=[
         Required(u"You forgot to enter username."),
         Length(min=3, message=(u'Your username must be %(min)d characters.')),
-        ValidUserName()])
+        ValidUserName()
+    ])
     password = PasswordField('Password', validators=[
         Required(u"Please provide a password."),
-        Length(min=6, message=(u'Please give a longer password'))])
+        Length(min=6, message=(u'Please give a longer password'))
+    ])
     remember_me = BooleanField('Remember me', default=False)
+
+
+class ProjectsForm(Form):
+    """
+    Doc doc doc
+    """
+    title = TextField('Title', validators=[
+        Required("You must put the project name."),
+        Length(min=3, message=(u'Title must be longer.'))
+    ])
+    description = TextField('Description', validators=[
+        Required("You must put a project description."),
+        Length(min=10, message=(u'A litle longer please'))
+    ])
+    tags = TextField('Tags', validators=[
+        Length(min=3, message=(u'A litle longer please'))
+    ])
+
 
 
 # need to separate views to views.py someday to manage things easily
@@ -147,8 +167,8 @@ def userpage(username=None):
         user.tagline = u'You are very special, you\'ll never be forgotten!'
         user.bio = u'Explain the rest of the world, why you are the most unique person to look at!'
         user.avatar = u'/static/Shaktimaan.jpg'
-        return render_template('aboutme.html', page_title='Claim this name: '+ username, user=user)
-    return render_template('aboutme.html', page_title=user.firstname+' '+user.lastname, user=user)
+        return render_template('aboutme.html', page_title='Claim this name: '+username, user=user, projectsform=ProjectsForm())
+    return render_template('aboutme.html', page_title=user.firstname+' '+user.lastname, user=user, projectsform=ProjectsForm())
 
 @application.route('/signup/', methods=['GET', 'POST'])
 def signup():
