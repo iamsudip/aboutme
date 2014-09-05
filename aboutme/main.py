@@ -258,7 +258,7 @@ def dbinit():
         description=u'Flipkart.com\'s captcha cracker', 
         tags=u'python, tesseract-ocr, PIL'))
     temp_user.portfolio.append(Portfolio(title=u'bdthankall',
-        description=u'THank all who wished you on your birthday in facebook',
+        description=u'Thank all who wished you on your birthday in facebook',
         tags=u'python, fbconsole, facebook-graph-api'))
     temp_user.portfolio.append(Portfolio(title=u'sysmon',
         description=u'System process monitor CLI tool',

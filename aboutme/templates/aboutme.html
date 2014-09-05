@@ -13,7 +13,7 @@
     <div class="col-sm-4">
         <div class="starter-template">
           <img src="{{user.avatar}}">
-          <div align="justify">{{ user.bio }}</div>
+          <div align="justify"><br>{{ user.bio }}</div>
         </div>
     </div> <!-- /.col-sm-4-->
 
@@ -26,8 +26,31 @@
             <span class="glyphicon glyphicon-search"></span>
         </button>
     </form>  end search field-->
-
-    <!-- right column 
+    <div class="col-sm-8"> 
+        <div class="container">
+        {% for project in user.portfolio %}
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <a href="#"><strong>{{ project.title }}</strong></a>
+                                <br>
+                                {{ project.description }}
+                            </div>
+                            <div class="col-sm-7">
+                                {% for tag in project.tags.split(',') %}
+                                    <span class="badge badge-important">{{ tag }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </li>   
+            </ul>
+        {% endfor %}
+        </div>
+    </div>
+    <!--
     <div class="col-sm-8"> 
         <ul class="list-group">
             <li class="list-group-item">Distributed POS application<span class="badge badge-important">python</span><span class="badge badge-success">flask</span><span class="badge badge-success">sqlalchemy</span><span class="badge badge-success">postgresql</span><span class="badge badge-success">openshift</span></li>
