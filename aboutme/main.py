@@ -6,7 +6,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy 
 from flask.ext.wtf import Form
 from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
-from wtforms import TextField, PasswordField, validators, HiddenField, TextAreaField, BooleanField
+from wtforms import TextField, PasswordField, HiddenField, TextAreaField, BooleanField
 from wtforms.validators import Required, EqualTo, Optional, Length, Email
 
 from utils import *
@@ -29,7 +29,7 @@ def load_user(id):
     return Users.query.get(id)
 
 
-# Need separate model to models.py from main.py someday            
+# Need to separate models to models.py from main.py someday
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(60), unique=True)
@@ -42,6 +42,8 @@ class Users(db.Model):
     bio = db.Column(db.Text)
     avatar = db.Column(db.String(255))
     active = db.Column(db.Boolean)
+    portfolio = db.relationship('Portfolio')
+    
     def __init__(self, username=None, password=None, email=None, firstname=None, \
         lastname=None, tagline=None, bio=None, avatar=None, active=None):
         self.username = username
@@ -75,6 +77,19 @@ class Users(db.Model):
     def get_id(self):
         """ Returns unique id of an user. """
         return unicode(self.id)
+
+
+class Portfolio(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(60), unique=True)
+    description = db.Column(db.Text)
+    tags = db.Column(db.Text)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    def __init__(self, title=None, description=None, tags=None):
+        self.title = title
+        self.description = description
+        self.tags = tags
 
 
 # need to separate forms from main.py soon, looks seriously fucked up!
@@ -225,10 +240,10 @@ def dbinit():
     db.drop_all()
     db.create_all()
     # Populating with data manually
-    db.session.add(Users(username=u'iamsudip',
+    temp_user = Users(username=u'iamsudip',
         firstname=u'Sudip',
         lastname=u'Maji',
-        password=hashed_password("nahi_batunga"),
+        password=hashed_password("nahi_bataunga"),
         email=u'iamsudip@programmer.net',
         tagline=u'A cool coder and an even cooler Pythonista',
         bio=u'I am a Pythonista and an open source enthusiast. I love sharing softwares,\
@@ -236,7 +251,19 @@ def dbinit():
         I like to implement my knowledge and learn while working on an exciting opportunity \
         on software design and development.',
         avatar=u'/static/iamsudip.jpg')
-    )
+    temp_user.portfolio.append(Portfolio(title=u'pysub-dl',
+        description=u'Commandline tool to download movie subtitles',
+        tags=u'Python, BeautifulSoup, Requests'))
+    temp_user.portfolio.append(Portfolio(title=u'DeCAPTCHas',
+        description=u'Flipkart.com\'s captcha cracker', 
+        tags=u'python, tesseract-ocr, PIL'))
+    temp_user.portfolio.append(Portfolio(title=u'bdthankall',
+        description=u'THank all who wished you on your birthday in facebook',
+        tags=u'python, fbconsole, facebook-graph-api'))
+    temp_user.portfolio.append(Portfolio(title=u'sysmon',
+        description=u'System process monitor CLI tool',
+        tags=u'python, sqlite3'))
+    db.session.add(temp_user)
     db.session.commit()
 
 if __name__ == '__main__':
