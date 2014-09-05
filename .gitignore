@@ -1,0 +1,3 @@
+aboutmeenv/
+.openshift/
+*.pyc
