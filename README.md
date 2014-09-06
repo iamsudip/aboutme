@@ -33,6 +33,18 @@ Setup
 
 First fork & clone the repo.
 
+Now *before creating and entering into virtualenv* make sure you install the following::
+
+I am using `postgresql-9.1` so you need to install this too.
+
+      $ sudo apt-get install postgresql-9.1
+
+      $ sudo apt-get install postgresql-server-dev-9.1
+
+I am using `bcrypt` to hash the passwords and `bcrypt` depends on `libffi-dev`
+
+	$ sudo apt-get install libffi-dev
+
 I always recommend python-virtualenv for development.
 
 After installing and activating the virtual environment do the follwing
@@ -41,39 +53,29 @@ Install the requirements file::
 
       $ pip install requirements.txt
 
-
-I am using postgresql-9.1 so you need to install this too::
-
-      $ sudo apt-get install postgresql-9.1
-
-      $ sudo apt-get install postgresql-server-dev-9.1
-
 Now, I spent hours fixing many things on my machine, so I want you don't waste the same.
-
 
 Setup the database server as follows::
 
-      $ sudo -u postgres createuser <your hostname>
+      $ sudo -u postgres createuser <your username>
 
 To create the database do this::
 
-      $ sudo -u postgres
+      $ createdb aboutmedb 
 
-      $ sudo createdb aboutmedb 
+Now open postgresql as::
 
-Now,
+      $ psql aboutmedb
 
-      $ sudo -u postgres psql postgres
+      $ \password postgres
 
-Enter your sudo password and continue, it will open psql interactive terminal
+Enter the password as: passwrd
 
-      $ /password postgres
+Repeat the password as: passwrd
 
-Enter the password as: postgres
+'passwrd' is the password without quote
 
-Repeat the password as: postgres
-
-'postgres' is the password without quote
+Setup `main.py` according to this username and password::
 
 I think your local server is ready to roll now.
 
