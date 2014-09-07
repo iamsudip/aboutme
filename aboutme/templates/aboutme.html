@@ -24,9 +24,11 @@
                 <form class="navbar-form navbar-right" role="search">
                     <div class="input-group">
                         <div class="input-group-btn" data-toggle="tooltip" data-placement="top" title="Click to add projects">
-                            <button class="btn btn-default btn-success" data-toggle="modal" data-target="#add_projects_form">
-                                <span class="glyphicon glyphicon-plus"></span>
-                            </button>
+                            {% if session['signed'] %}
+                                <button class="btn btn-default btn-success" data-toggle="modal" data-target="#add_projects_form" id="project_btnadd">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </button>
+                            {% endif %}
                         </div>
                         <input class="form-control" type="text" placeholder="Search projects">
                         <div class="input-group-btn">
@@ -39,14 +41,19 @@
             </div> <!-- /.col-sm-12-->
         </div> <!-- end row-->
         <div class="container">
-            {% for project in user.portfolio %}
-                <ul class="list-group">
+            {% if user.portfolio|length == 0 %}
+                Please add your awesome portfolio!
+            {% endif %}
+            <ul class="list-group">
+                {% for project in user.portfolio %}
                     <li class="list-group-item">
                         <div class="container">
                             <div class="row">
                                 <div class="col-sm-7">
-                                    <a href="#"><span class="glyphicon glyphicon-edit"></span></a>
-                                    <a href="#"><span class="glyphicon glyphicon-remove"></span></a>
+                                    {% if session['signed'] %}
+                                        <a href="#"><span class="glyphicon glyphicon-edit"></span></a>
+                                        <a href="#"><span class="glyphicon glyphicon-remove"></span></a>
+                                    {% endif %}
                                     <strong>{{ project.title }}</strong>
                                     <br>
                                     {{ project.description }}
@@ -59,8 +66,8 @@
                             </div>
                         </div>
                     </li>
-                </ul>
-            {% endfor %}
+                {% endfor %}
+            </ul>
         </div>
     </div> <!-- /.col-sm-8-->
 </div>
@@ -69,7 +76,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <button type="button" class="close" data-dismiss="modal" area-hidden="true"></button>
                 <h3 class="modal-title">Project details</h3>
             </div>
             <div class="modal-body">
@@ -77,7 +84,7 @@
                     <div class="row">
                         <div class="col-sm-1"></div>
                         <div class="col-sm-10">
-                            <form class="form-horizontal" action="" method="POST" >
+                            <form class="form-horizontal" action="" method="POST" id="projectform">
                                 {{ projectsform.hidden_tag() }}
                                 <div class="form-group">
                                     {{ projectsform.title.label }}
@@ -99,12 +106,120 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary btn-success">Save</button>
+                    <button type="submit" class="btn btn-primary btn-success" id="project_btnsave">Save</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+{% endblock %}
+
+{% block footer %}
+
+<script>
+
+    $(document).ready(
+        function()
+        {
+        }
+    );
+
+    function deleteProject(id)
+    {
+        bootbox.confirm("<strong>Project deletion</strong><p>You can't undo this action. Are you sure?</p>",
+            function(result)
+            {
+                if(result)
+                {
+                    $.getJSON(  
+                        "/project_delete/" + id,  
+                        {}
+                    ).done(
+                        function(data)
+                        {
+                            location.reload();
+                        }
+                    ).fail(
+                        function(data,textstatus,xhr)
+                        {
+                            alert('fail = ' + data + ', textstatus ' + textstatus );    
+                        }
+                    );
+                }
+            }
+        );
+    }
+    
+    function editProject(id)
+    {
+        $("#project_id").val(id);
+        $.getJSON(  
+            "/project_get/" + id,  
+            {}
+        ).done(
+            function(data)
+            {
+                $("#project_id").val(data.id);
+                $("#title").val(data.title);
+                $("#description").val(data.description);
+                $("#tags").tagsinput("removeAll");
+                $("#tags").tagsinput("add", data.tags);
+                $("#add_projects_form").modal('show');
+            }
+        ).fail(
+            function(data,textstatus,xhr)
+            {
+                alert('fail = ' + data + ', textstatus ' + textstatus );    
+            }
+        );
+    }
+
+    $("#project_btnadd").click(
+        function()
+        {
+            $("#project_id").val("");
+            $("#title").val("");
+            $("#description").val("");
+            $("#tags").tagsinput("removeAll");
+            $("#add_projects_form").modal('show');
+            return false;
+        }
+    );
+
+    $("#project_btnsave").click(
+        function()
+        {
+            $.post(  
+                "{{ url_for('project_update') }}",  
+                $("#projectform").serialize(),  
+                function(data, textStatus)
+                {
+                    console.log(data)
+                    var errors = $.parseJSON(data);
+        
+
+                    $("#error_title").text("");
+                    $("#error_description").text("");
+                    $("#error_tags").text("");
+        
+                    if(errors.iserror)
+                    {       
+                        console.log('set');
+                        if(errors.title!=undefined) $("#error_title").text(errors.title[0]);
+                        if(errors.description!=undefined) $("#error_description").text(errors.description[0]);
+                        if(errors.tags!=undefined) $("#error_tags").text(errors.tags[0]);
+                    }else if (errors.savedsuccess)
+                    {
+                        $("#add_projects_form").modal('hide');
+                        location.reload();
+                    }
+                }
+            );
+        }
+    );
+
+</script>
 
 {% endblock %}
