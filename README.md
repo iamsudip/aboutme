@@ -51,7 +51,7 @@ After installing and activating the virtual environment do the follwing
 
 Install the requirements file::
 
-      $ pip install requirements.txt
+      $ pip install -r requirements.txt
 
 Now, I spent hours fixing many things on my machine, so I want you don't waste the same.
 
@@ -67,7 +67,7 @@ Now open postgresql as::
 
       $ psql aboutmedb
 
-      $ \password postgres
+      # \password
 
 Enter the password as: passwrd
 
