@@ -150,7 +150,12 @@ class ProjectsForm(Form):
     ])
 
 
-
+def _asdict(self):
+        result = OrderedDict()
+        for key in self.__mapper__.c.keys():
+            result[key] = getattr(self, key)
+        return result
+        
 # need to separate views to views.py someday to manage things easily
 @application.route('/')
 def index():
@@ -237,10 +242,16 @@ def signin():
         return render_template('signin.html', signin_form=SigninForm(), page_title='Signin to Conversed!')
 
 # Not implemented yet
-@application.route('/profile', methods=['POST', 'GET'])
+@application.route('/profile/', methods=['POST', 'GET'])
 @login_required
 def profile():
     return render_template('profile.html', page_title='Your online profile')
+
+@application.route('/project_get/<id>')
+@login_required
+def project_get(id):
+    project = Portfolio.query.get(id)
+    return json.dumps(project._asdict())
 
 @application.route('/signout/', methods=['GET'])
 def signout():
