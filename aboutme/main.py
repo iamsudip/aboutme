@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from collections import OrderedDict
+import json
 import os
 
 from flask import Flask, render_template, request, redirect, url_for, session
@@ -21,7 +23,7 @@ db = SQLAlchemy(application)
 
 login_manager = LoginManager()
 login_manager.init_app(application)
-login_manager.login_view = '/signin'
+login_manager.login_view = '/signin/'
 
 @login_manager.user_loader
 def load_user(id):
@@ -91,6 +93,11 @@ class Portfolio(db.Model):
         self.description = description
         self.tags = tags
 
+    def _asdict(self):
+        result = OrderedDict()
+        for key in self.__mapper__.c.keys():
+            result[key] = getattr(self, key)
+        return result
 
 # need to separate forms from main.py soon, looks seriously fucked up!
 class SignupForm(Form):
@@ -150,12 +157,6 @@ class ProjectsForm(Form):
     ])
 
 
-def _asdict(self):
-        result = OrderedDict()
-        for key in self.__mapper__.c.keys():
-            result[key] = getattr(self, key)
-        return result
-        
 # need to separate views to views.py someday to manage things easily
 @application.route('/')
 def index():
@@ -248,10 +249,48 @@ def profile():
     return render_template('profile.html', page_title='Your online profile')
 
 @application.route('/project_get/<id>')
-@login_required
 def project_get(id):
     project = Portfolio.query.get(id)
     return json.dumps(project._asdict())
+
+@application.route('/project_delete/<id>') 
+def project_delete(id):
+    project = Portfolio.query.get(id)
+    db.session.delete(project)
+    db.session.commit()
+    result = {}
+    result['result'] = 'success';
+    return json.dumps(result)
+
+@application.route('/project_update/', methods = ['POST'])
+def project_update():
+    form = ProjectsForm(request.form)
+    if form.validate():
+        result = {}
+        result['iserror'] = False
+        print form.project_id
+        if not form.project_id.data:
+            print 2
+            user = Users.query.filter_by(username=session['username']).first()
+            print session['username']
+            if user is not None:
+                user.portfolio.append(Portfolio(title=form.title.data, description=form.description.data, tags=form.tags.data))
+                db.session.commit()
+                result['savedsuccess'] = True 
+            else:
+                result['savedsuccess'] = False
+        else:
+            print 3
+            project = Portfolio.query.get(form.project_id.data)
+            print project
+            form.populate_obj(project)
+            db.session.commit()
+            result['savedsuccess'] = True
+            
+        return json.dumps(result)
+ 
+    form.errors['iserror'] = True
+    return json.dumps(form.errors)
 
 @application.route('/signout/', methods=['GET'])
 def signout():
