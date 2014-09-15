@@ -75,7 +75,9 @@ Repeat the password as: passwrd
 
 'passwrd' is the password without quote
 
-Setup `main.py` according to this username and password::
+Setup `config.py` according to this username and password as::
+
+	postgresql://username:passwrd@localhost:5432/aboutmedb
 
 I think your local server is ready to roll now.
 
